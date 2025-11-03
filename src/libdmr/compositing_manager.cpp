@@ -138,6 +138,9 @@ CompositingManager::CompositingManager()
         m_setSpecialControls = detect550Series();
     }
 
+    m_bSpecialAmdGpu = isAmdRadeonRx580();
+    qInfo() << "SpecialAmdGpu:" << m_bSpecialAmdGpu;
+
 //    bool isI915 = false;
 //    for (int id = 0; id <= 10; id++) {
 //        if (!QFile::exists(QString("/sys/class/drm/card%1").arg(id))) break;
@@ -391,6 +394,21 @@ bool CompositingManager::runningOnNvidia()
     }
 
     return s_runningOnNvidia;
+}
+
+bool CompositingManager::isAmdRadeonRx580()
+{
+    QStringList sList = dmr::utils::runPipeProcess("lspci", "VGA compatible controller");
+    foreach (QString readData, sList) {
+        if (readData.contains("Radeon RX 580 2048SP")) {
+            if (!readData.isEmpty()) {
+                qWarning() << "Detect AMD Radeon RX 580 series, using vaapi, info:" << readData;
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void CompositingManager::softDecodeCheck()

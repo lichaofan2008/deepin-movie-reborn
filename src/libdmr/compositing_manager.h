@@ -99,6 +99,8 @@ public:
     void softDecodeCheck();
     bool isOnlySoftDecode();
     bool isSpecialControls();
+    // 判断是否是特殊的AMD GPU（如：Radeon RX 580 2048SP，用vdpau参数会导致播放部分HEVC视频黑屏）
+    bool isSpecialAmdGpu() { return m_bSpecialAmdGpu; };
     void getMpvConfig(QMap<QString, QString> *&aimMap);
 
 signals:
@@ -114,6 +116,7 @@ private:
     bool isDriverLoadedCorrectly();
     bool isDirectRendered();
     bool isProprietaryDriver();
+    bool isAmdRadeonRx580();
     /**
      * @brief initMember 初始化成员变量
      */
@@ -128,6 +131,7 @@ private:
     bool m_bHasCard;
     bool m_bOnlySoftDecode {false};  //kunpeng920走软解码
     bool m_setSpecialControls {false};
+    bool m_bSpecialAmdGpu {false};
     bool m_bZXIntgraphics;
     //保存配置
     QMap<QString, QString> *m_pMpvConfig;
